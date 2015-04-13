@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import com.programmaniaks.training.unittest.entity.Article;
-import com.programmaniaks.training.unittest.entity.User;
 
 @Repository
 public class ArticleDao {
@@ -39,7 +38,7 @@ public class ArticleDao {
 	
 	@SuppressWarnings("unchecked")
 	public List<Article> findAll() {
-		Query query = entityManager.createQuery("Select u from User u");
+		Query query = entityManager.createQuery("Select a from Article a");
 		return query.getResultList();
 	}
 
