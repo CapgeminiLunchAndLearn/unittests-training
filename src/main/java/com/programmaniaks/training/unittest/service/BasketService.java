@@ -11,17 +11,23 @@ import com.programmaniaks.training.unittest.entity.Article;
 import com.programmaniaks.training.unittest.entity.Basket;
 import com.programmaniaks.training.unittest.exceptions.NotEnoughtQtyException;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class BasketService {
 	
 	@Autowired
 	private ArticleDao articleDao;
 
+	/**
+	 * compute total price of the basket
+	 * @param basket
+	 * @return BigDecimal
+	 */
 	public BigDecimal computeCheckOut(Basket basket){
-		BigDecimal sum = BigDecimal.ZERO;
-		basket.getContent().forEach(
-				(article,number)->
-				sum.add(BigDecimal.valueOf(article.getPrice()*number)));
-		return sum;
+		checkNotNull(basket.getContent(), "Basket content should not be null.");
+		return basket.getContent().entrySet().stream()
+				.map(e -> new BigDecimal(e.getKey().getPrice() * e.getValue()))
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 	
 	@Transactional

@@ -1,13 +1,13 @@
 package com.programmaniaks.training.unittest.entity;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.context.annotation.Scope;
 
 @Scope("Session")
 public class Basket {
 
-	private HashMap<Article, Integer> content;
+	private Map<Article, Integer> content;
 	
 	private User user;
 	
@@ -21,11 +21,11 @@ public class Basket {
 		this.sum = sum;
 	}
 
-	public HashMap<Article, Integer> getContent() {
+	public Map<Article, Integer> getContent() {
 		return content;
 	}
 
-	public void setContent(HashMap<Article, Integer> content) {
+	public void setContent(Map<Article, Integer> content) {
 		this.content = content;
 	}
 
