@@ -30,6 +30,11 @@ public class BasketService {
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 	
+	/**
+	 * automatic update of item stocks
+	 * @param basket
+	 * @throws NotEnoughtQtyException
+	 */
 	@Transactional
 	public void updateStock(Basket basket) throws NotEnoughtQtyException{
 		for(Entry<Article, Integer> element:basket.getContent().entrySet()){

@@ -6,10 +6,16 @@ import java.util.HashMap;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.programmaniaks.training.unittest.dao.ArticleDao;
 import com.programmaniaks.training.unittest.entity.Article;
 import com.programmaniaks.training.unittest.entity.Basket;
+import com.programmaniaks.training.unittest.exceptions.NotEnoughtQtyException;
+
+import static org.mockito.Mockito.*;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -19,7 +25,11 @@ public class BasketServiceTest {
 	
 	private Article articleB = new Article();
 	
+	@InjectMocks
 	private BasketService basketService = new BasketService();
+	
+	@Mock
+	private ArticleDao articleDao;
 	
 
 	@Test
@@ -56,4 +66,21 @@ public class BasketServiceTest {
 		basket.setContent(null);
 		basketService.computeCheckOut(basket);
 	}
+	
+	@Test
+	public void updateStock() throws NotEnoughtQtyException{
+		Basket basket= new Basket();
+		basket.setContent(new HashMap<Article, Integer>());
+		//basket initialization
+		articleA.setPrice(20.0);
+		articleA.setName("Article A");
+		articleA.setQuantity(4);
+		basket.getContent().put(articleA, 1);
+		when(articleDao.find(anyLong())).thenReturn(articleA);
+		basketService.updateStock(basket);
+		Assert.assertEquals(3, articleA.getQuantity());
+		verify(articleDao,times(1)).find(anyLong());
+	}
+	
+	
 }
