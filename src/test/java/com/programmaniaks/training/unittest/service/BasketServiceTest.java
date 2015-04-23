@@ -17,61 +17,59 @@ import com.programmaniaks.training.unittest.exceptions.NotEnoughtQtyException;
 
 import static org.mockito.Mockito.*;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public class BasketServiceTest {
-	
+
 	private Article articleA = new Article();
-	
+
 	private Article articleB = new Article();
-	
+
 	@InjectMocks
 	private BasketService basketService = new BasketService();
-	
+
 	@Mock
 	private ArticleDao articleDao;
-	
 
 	@Test
-	public void computeCheckOutTest(){
-		Basket basket= new Basket();
+	public void computeCheckOutTest() {
+		Basket basket = new Basket();
 		basket.setContent(new HashMap<Article, Integer>());
-		//basket initialization
+		// basket initialization
 		articleA.setPrice(20.0);
 		articleA.setName("Article A");
 		articleB.setPrice(10.0);
 		articleB.setName("ArticleB");
 		basket.getContent().put(articleA, 1);
-		//Unique article test: sum equals article price
+		// Unique article test: sum equals article price
 		BigDecimal sum = basketService.computeCheckOut(basket);
 		Assert.assertEquals(BigDecimal.valueOf(20), sum);
-		//Multiple article test: sum equals article price * qty
+		// Multiple article test: sum equals article price * qty
 		basket.getContent().put(articleA, 3);
 		sum = basketService.computeCheckOut(basket);
 		Assert.assertEquals(BigDecimal.valueOf(60), sum);
-		//Multiple article test: sum equals article price * qty for each elem
+		// Multiple article test: sum equals article price * qty for each elem
 		basket.getContent().put(articleB, 1);
 		sum = basketService.computeCheckOut(basket);
 		Assert.assertEquals(BigDecimal.valueOf(70), sum);
-		//case basket is empty
+		// case basket is empty
 		basket.getContent().clear();
 		sum = basketService.computeCheckOut(basket);
 		Assert.assertEquals(BigDecimal.ZERO, sum);
 	}
-	
+
 	@Test(expected = NullPointerException.class)
-	public void computeCheckOutTestException(){
-		Basket basket= new Basket();
-		//case null
+	public void computeCheckOutTestException() {
+		Basket basket = new Basket();
+		// case null
 		basket.setContent(null);
 		basketService.computeCheckOut(basket);
 	}
-	
+
 	@Test
-	public void updateStock() throws NotEnoughtQtyException{
-		Basket basket= new Basket();
+	public void updateStockTest() throws NotEnoughtQtyException {
+		Basket basket = new Basket();
 		basket.setContent(new HashMap<Article, Integer>());
-		//basket initialization
+		// basket initialization
 		articleA.setPrice(20.0);
 		articleA.setName("Article A");
 		articleA.setQuantity(4);
@@ -79,8 +77,30 @@ public class BasketServiceTest {
 		when(articleDao.find(anyLong())).thenReturn(articleA);
 		basketService.updateStock(basket);
 		Assert.assertEquals(3, articleA.getQuantity());
-		verify(articleDao,times(1)).find(anyLong());
+		verify(articleDao, times(1)).find(anyLong());
+		verify(articleDao, times(1)).update(any(Article.class));
 	}
-	
-	
+
+	@Test(expected = NotEnoughtQtyException.class)
+	public void updateStockTestException() throws NotEnoughtQtyException {
+		Basket basket = new Basket();
+		basket.setContent(new HashMap<Article, Integer>());
+		// basket initialization
+		articleA.setPrice(20.0);
+		articleA.setName("Article A");
+		articleA.setQuantity(2);
+		basket.getContent().put(articleA, 3);
+		when(articleDao.find(anyLong())).thenReturn(articleA);
+
+		try {
+			basketService.updateStock(basket);
+		} catch (NotEnoughtQtyException e) {
+			throw e;
+		} finally {
+			verify(articleDao, times(1)).find(anyLong());
+			verify(articleDao, times(0)).update(any(Article.class));
+		}
+
+	}
+
 }

@@ -39,8 +39,13 @@ public class BasketService {
 	public void updateStock(Basket basket) throws NotEnoughtQtyException{
 		for(Entry<Article, Integer> element:basket.getContent().entrySet()){
 			Article articleFromDb = articleDao.find(element.getKey().getId());
-			articleFromDb.setQuantity(articleFromDb.getQuantity()-element.getValue());
-			articleDao.update(articleFromDb);
+			int qty =articleFromDb.getQuantity()-element.getValue();
+			if(qty>=0){
+				articleFromDb.setQuantity(qty);
+				articleDao.update(articleFromDb);
+			}else{
+				throw new NotEnoughtQtyException("Not enough quantity for item: "+articleFromDb.getName());
+			}			
 		}
 	}
 }
