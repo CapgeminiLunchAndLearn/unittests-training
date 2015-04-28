@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.programmaniaks.training.unittest.dao.ArticleDao;
@@ -13,6 +14,7 @@ import com.programmaniaks.training.unittest.exceptions.NotEnoughtQtyException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@Service
 public class BasketService {
 	
 	@Autowired
