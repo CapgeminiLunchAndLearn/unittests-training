@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -30,15 +31,20 @@ public class BasketServiceTest {
 	@Mock
 	private ArticleDao articleDao;
 
+	@Before
+	public void before() {
+		articleA.setPrice(20.0);
+		articleA.setName("Article A");
+		
+		articleB.setPrice(10.0);
+		articleB.setName("ArticleB");
+	}
+
 	@Test
 	public void computeCheckOutTest() {
 		Basket basket = new Basket();
 		basket.setContent(new HashMap<Article, Integer>());
 		// basket initialization
-		articleA.setPrice(20.0);
-		articleA.setName("Article A");
-		articleB.setPrice(10.0);
-		articleB.setName("ArticleB");
 		basket.getContent().put(articleA, 1);
 		// Unique article test: sum equals article price
 		BigDecimal sum = basketService.computeCheckOut(basket);
@@ -70,8 +76,6 @@ public class BasketServiceTest {
 		Basket basket = new Basket();
 		basket.setContent(new HashMap<Article, Integer>());
 		// basket initialization
-		articleA.setPrice(20.0);
-		articleA.setName("Article A");
 		articleA.setQuantity(4);
 		basket.getContent().put(articleA, 1);
 		when(articleDao.find(anyLong())).thenReturn(articleA);
@@ -86,16 +90,12 @@ public class BasketServiceTest {
 		Basket basket = new Basket();
 		basket.setContent(new HashMap<Article, Integer>());
 		// basket initialization
-		articleA.setPrice(20.0);
-		articleA.setName("Article A");
 		articleA.setQuantity(2);
 		basket.getContent().put(articleA, 3);
 		when(articleDao.find(anyLong())).thenReturn(articleA);
 
 		try {
 			basketService.updateStock(basket);
-		} catch (NotEnoughtQtyException e) {
-			throw e;
 		} finally {
 			verify(articleDao, times(1)).find(anyLong());
 			verify(articleDao, times(0)).update(any(Article.class));
