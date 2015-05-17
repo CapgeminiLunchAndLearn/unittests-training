@@ -89,9 +89,21 @@ public class BasketServiceTest {
 		verify(articleDao, times(1)).update(any(Article.class));
 	}
 
-
+	@Test(expected = NotEnoughtQtyException.class)
 	public void updateStockTestException() throws NotEnoughtQtyException {
-	
+		Basket basket = new Basket();
+		basket.setContent(new HashMap<Article, Integer>());
+		articleA.setQuantity(0);
+		basket.getContent().put(articleA, 1);
+		when(articleDao.find(anyLong())).thenReturn(articleA);
+		try{
+			basketService.updateStock(basket);
+		} finally {
+			verify(articleDao, times(1)).find(anyLong());
+			verify(articleDao, times(0)).update(any(Article.class));
+		}
+		
+		
 
 	}
 

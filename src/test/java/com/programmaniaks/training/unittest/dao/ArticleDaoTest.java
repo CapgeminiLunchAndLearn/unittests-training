@@ -64,4 +64,20 @@ public class ArticleDaoTest {
 		assertEquals(articleDao.findAll().size(), articles.size());
 	}
 	
+	@Test
+	public void testArticlefindAzerty() {
+		List<Article> articles = articleDao.findName("Az");
+		assertEquals(0, articles.size());
+		
+		Article article = new Article();
+		article.setName("Azerty");
+		article.setPrice(5.0);
+		article.setQuantity(0);
+		article.setDescription("Produit pour test ArticleDaoTest.findLike");
+		articleDao.create(article);
+		
+		articles = articleDao.findName("Az");
+		assertEquals(1, articles.size());
+	}
+	
 }
