@@ -1,5 +1,6 @@
 package com.programmaniaks.training.unittest.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -11,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,18 +26,15 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
-import com.programmaniaks.training.unittest.MockitoAnnotationAwareTest;
 import com.programmaniaks.training.unittest.entity.Article;
 import com.programmaniaks.training.unittest.entity.Basket;
 import com.programmaniaks.training.unittest.service.BasketService;
-
-import static org.junit.Assert.*;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/spring-test-context.xml")
 @WebAppConfiguration
-public class BasketControllerTest extends MockitoAnnotationAwareTest {
+public class BasketControllerTest {
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -55,6 +54,7 @@ public class BasketControllerTest extends MockitoAnnotationAwareTest {
 	
 	@Before
 	public void setUp() {
+		MockitoAnnotations.initMocks(this);
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
 	
