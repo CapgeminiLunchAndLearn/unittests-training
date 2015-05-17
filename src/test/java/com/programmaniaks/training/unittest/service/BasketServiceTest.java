@@ -1,9 +1,15 @@
 package com.programmaniaks.training.unittest.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +21,6 @@ import com.programmaniaks.training.unittest.dao.ArticleDao;
 import com.programmaniaks.training.unittest.entity.Article;
 import com.programmaniaks.training.unittest.entity.Basket;
 import com.programmaniaks.training.unittest.exceptions.NotEnoughtQtyException;
-
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BasketServiceTest {
@@ -48,19 +52,19 @@ public class BasketServiceTest {
 		basket.getContent().put(articleA, 1);
 		// Unique article test: sum equals article price
 		BigDecimal sum = basketService.computeCheckOut(basket);
-		Assert.assertEquals(BigDecimal.valueOf(20), sum);
+		assertEquals(BigDecimal.valueOf(20), sum);
 		// Multiple article test: sum equals article price * qty
 		basket.getContent().put(articleA, 3);
 		sum = basketService.computeCheckOut(basket);
-		Assert.assertEquals(BigDecimal.valueOf(60), sum);
+		assertEquals(BigDecimal.valueOf(60), sum);
 		// Multiple article test: sum equals article price * qty for each elem
 		basket.getContent().put(articleB, 1);
 		sum = basketService.computeCheckOut(basket);
-		Assert.assertEquals(BigDecimal.valueOf(70), sum);
+		assertEquals(BigDecimal.valueOf(70), sum);
 		// case basket is empty
 		basket.getContent().clear();
 		sum = basketService.computeCheckOut(basket);
-		Assert.assertEquals(BigDecimal.ZERO, sum);
+		assertEquals(BigDecimal.ZERO, sum);
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -80,7 +84,7 @@ public class BasketServiceTest {
 		basket.getContent().put(articleA, 1);
 		when(articleDao.find(anyLong())).thenReturn(articleA);
 		basketService.updateStock(basket);
-		Assert.assertEquals(3, articleA.getQuantity());
+		assertEquals(3, articleA.getQuantity());
 		verify(articleDao, times(1)).find(anyLong());
 		verify(articleDao, times(1)).update(any(Article.class));
 	}
