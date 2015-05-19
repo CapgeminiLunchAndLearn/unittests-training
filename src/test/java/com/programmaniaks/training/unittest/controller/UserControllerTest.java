@@ -41,39 +41,13 @@ public class UserControllerTest {
 	private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
 												MediaType.APPLICATION_JSON.getSubtype(),
 												Charset.forName("utf8"));
-	
-	@Autowired
-	@InjectMocks
-	private UserController userController;
-	
-	@Mock
-	private UserService userService;
-	
-	
-	@Before
-	public void setUp() {
-		MockitoAnnotations.initMocks(this);
-		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-	}
+
+	// Ne pas oublier l'initialisation
 	
 	
 	@Test
 	public void userCreate() throws Exception {
-		User userExpected = new User();
-		userExpected.setId((long) 1);
-		userExpected.setName("Toto");
-		userExpected.setUsername("Tata");
-		userExpected.setPassword("123");
-		userExpected.setDateOfBirth(new Date());
 		
-		MvcResult result = mockMvc.perform(put("/user/")
-					.contentType(contentType)
-					.content(JsonParser.toJson(userExpected)))
-					.andReturn();
-		
-		User userActual = JsonParser.toObject(result.getResponse().getContentAsString(), User.class);
-		assertEquals(userExpected, userActual);
-		verify(userService, times(1)).create(userExpected);
 	}
 
 	public MediaType getContentType() {

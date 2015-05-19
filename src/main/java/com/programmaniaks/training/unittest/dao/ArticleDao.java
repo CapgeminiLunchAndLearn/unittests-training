@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.stereotype.Repository;
 
 import com.programmaniaks.training.unittest.entity.Article;
@@ -49,10 +50,8 @@ public class ArticleDao {
 		return query.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Article> findName(String string) {
-		Query query = entityManager.createQuery("Select a from Article a where a.name like :name").setParameter("name", string+"%");
-		return query.getResultList();
+		throw new NotYetImplementedException("ArticleDao.findName");
 	}
 
 }
