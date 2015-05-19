@@ -1,11 +1,10 @@
 package com.programmaniaks.training.unittest.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.Date;
 
@@ -25,10 +24,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.programmaniaks.training.unittest.entity.User;
 import com.programmaniaks.training.unittest.service.UserService;
+import com.programmaniaks.training.unittest.utils.JsonParser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/spring-test-context.xml")
@@ -60,36 +58,23 @@ public class UserControllerTest {
 	
 	
 	@Test
-	public void userCreate() {
-		User user = new User();
-		user.setId((long) 1);
-		user.setName("Toto");
-		user.setUsername("Tata");
-		user.setPassword("123");
-		user.setDateOfBirth(new Date());
+	public void userCreate() throws Exception {
+		User userExpected = new User();
+		userExpected.setId((long) 1);
+		userExpected.setName("Toto");
+		userExpected.setUsername("Tata");
+		userExpected.setPassword("123");
+		userExpected.setDateOfBirth(new Date());
 		
-		
-		try {
-			MvcResult result = mockMvc.perform(put("/user/")
+		MvcResult result = mockMvc.perform(put("/user/")
 					.contentType(contentType)
-					.content(json(user)))
+					.content(JsonParser.toJson(userExpected)))
 					.andReturn();
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		verify(userService, times(1)).create(user);
+		User userActual = JsonParser.toObject(result.getResponse().getContentAsString(), User.class);
+		assertEquals(userExpected, userActual);
+		verify(userService, times(1)).create(userExpected);
 	}
-	
-	
-	protected String json(Object o) throws JsonProcessingException {
-		ObjectMapper test = new ObjectMapper();
-		return test.writeValueAsString(o);
-    }
 
 	public MediaType getContentType() {
 		return contentType;

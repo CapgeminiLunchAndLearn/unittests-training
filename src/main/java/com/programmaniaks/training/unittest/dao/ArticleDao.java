@@ -49,6 +49,7 @@ public class ArticleDao {
 		return query.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Article> findName(String string) {
 		Query query = entityManager.createQuery("Select a from Article a where a.name like :name").setParameter("name", string+"%");
 		return query.getResultList();

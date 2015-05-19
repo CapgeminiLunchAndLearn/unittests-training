@@ -23,12 +23,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import com.programmaniaks.training.unittest.entity.Article;
 import com.programmaniaks.training.unittest.entity.Basket;
 import com.programmaniaks.training.unittest.service.BasketService;
+import com.programmaniaks.training.unittest.utils.JsonParser;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -73,15 +72,12 @@ public class BasketControllerTest {
 		
 		MvcResult result = mockMvc.perform(post("/basket/sum")
 				.contentType(contentType)
-				.content(json(basket)))
+				.content(JsonParser.toJson(basket)))
 				.andReturn();
 		assertEquals("60", result.getResponse().getContentAsString());
 	}
 	
-	protected String json(Object o) throws JsonProcessingException {
-		ObjectMapper test = new ObjectMapper();
-		return test.writeValueAsString(o);
-    }
+	
 
 	public MediaType getContentType() {
 		return contentType;
