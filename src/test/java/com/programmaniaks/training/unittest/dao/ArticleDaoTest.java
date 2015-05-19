@@ -65,7 +65,7 @@ public class ArticleDaoTest {
 	}
 	
 	@Test
-	public void testArticlefindAzerty() {
+	public void testFindName() {
 		List<Article> articles = articleDao.findName("Az");
 		assertEquals(0, articles.size());
 		
